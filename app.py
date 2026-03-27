@@ -322,7 +322,7 @@ def add_install_qr():
             const qrcodeDiv = document.getElementById('qrcode');
             if (qrcodeDiv && !qrcodeDiv.hasChildNodes()) {
                 new QRCode(qrcodeDiv, {
-                    text: window.location.href,
+                    text: https://mindcheck.streamlit.app,
                     width: 180,
                     height: 180
                 });
