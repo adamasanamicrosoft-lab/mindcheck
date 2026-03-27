@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck APK Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .card {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        .step {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .step h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        code {
+            background: #eee;
+            padding: 2px 5px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>📱 Créer l'APK MindCheck</h1>
+    <p>Transforme ton application en véritable application Android</p>
+    
+    <div class="card">
+        <h2>🎯 URL de ton application</h2>
+        <input type="text" id="appUrl" value="https://mindcheck.streamlit.app" readonly>
+        <button onclick="copyUrl()">Copier l'URL</button>
+    </div>
+    
+    <div class="card">
+        <h2>📦 Méthode 1: Utiliser un générateur APK (Sans code)</h2>
+        <div class="step">
+            <h3>🔹 Option A: PWABuilder (Recommandé)</h3>
+            <p>1. Va sur <a href="https://www.pwabuilder.com" target="_blank">PWABuilder.com</a></p>
+            <p>2. Colle ton URL: <code>https://mindcheck.streamlit.app</code></p>
+            <p>3. Clique sur "Package"</p>
+            <p>4. Télécharge l'APK pour Android</p>
+            <p>5. Installe l'APK sur ton téléphone</p>
+        </div>
+        
+        <div class="step">
+            <h3>🔹 Option B: Web2Apk</h3>
+            <p>1. Va sur <a href="https://web2apk.com" target="_blank">Web2Apk.com</a></p>
+            <p>2. Colle ton URL: <code>https://mindcheck.streamlit.app</code></p>
+            <p>3. Choisis une icône (tu peux utiliser le 🧠)</p>
+            <p>4. Clique sur "Generate APK"</p>
+            <p>5. Télécharge et installe l'APK</p>
+        </div>
+        
+        <div class="step">
+            <h3>🔹 Option C: Avec Thunkable (No-code)</h3>
+            <p>1. Va sur <a href="https://thunkable.com" target="_blank">Thunkable.com</a></p>
+            <p>2. Crée un nouveau projet</p>
+            <p>3. Ajoute un composant "WebView"</p>
+            <p>4. Configure l'URL: <code>https://mindcheck.streamlit.app</code></p>
+            <p>5. Publie l'APK</p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>📱 Comment installer sur ton téléphone</h2>
+        <h3>📱 Android:</h3>
+        <ol>
+            <li>Télécharge le fichier .apk</li>
+            <li>Ouvre le fichier depuis le gestionnaire de fichiers</li>
+            <li>Autorise "Installation depuis des sources inconnues" si demandé</li>
+            <li>Clique sur "Installer"</li>
+            <li>L'application apparaît dans ton tiroir d'applications !</li>
+        </ol>
+        
+        <h3>🍎 iPhone / iPad:</h3>
+        <ol>
+            <li>Ouvre Safari et va sur <code>https://mindcheck.streamlit.app</code></li>
+            <li>Clique sur le bouton "Partager" (carré avec flèche)</li>
+            <li>Scrolle et choisis "Ajouter à l'écran d'accueil"</li>
+            <li>Clique sur "Ajouter"</li>
+            <li>L'icône apparaît sur ton écran d'accueil !</li>
+        </ol>
+    </div>
+    
+    <div class="card">
+        <h2>🎨 Icônes et logos</h2>
+        <p>Télécharge ces icônes pour ton application :</p>
+        <button onclick="downloadIcon(512)">📱 Icône 512x512</button>
+        <button onclick="downloadIcon(192)">📱 Icône 192x192</button>
+        <button onclick="downloadIcon(128)">📱 Icône 128x128</button>
+    </div>
+    
+    <div class="card">
+        <h2>📤 Partager avec tes utilisateurs</h2>
+        <p>Une fois l'APK créé, tu peux le partager via :</p>
+        <ul>
+            <li>Google Drive</li>
+            <li>WeTransfer</li>
+            <li>Ton propre site web</li>
+            <li>QR Code à scanner</li>
+        </ul>
+    </div>
+    
+    <script>
+        function copyUrl() {
+            const url = document.getElementById('appUrl');
+            url.select();
+            document.execCommand('copy');
+            alert('URL copiée !');
+        }
+        
+        function downloadIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Dégradé violet
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Emoji cerveau
+            ctx.fillStyle = 'white';
+            ctx.font = `${size * 0.6}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🧠', size/2, size/2);
+            
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>
