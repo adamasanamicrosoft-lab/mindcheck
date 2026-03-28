@@ -805,14 +805,13 @@ if os.path.exists(HISTORIQUE_FILE):
 else:
     st.info(T["histo_vide"])
 
-# ── QR Code pour installation mobile (Étape 3) ──
+# ── QR Code pour installation mobile ──
 st.markdown("---")
+
 def add_install_qr():
     import qrcode
-    from PIL import Image
     import io
     
-    # Générer le QR code en Python
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -823,7 +822,6 @@ def add_install_qr():
     qr.make(fit=True)
     img = qr.make_image(fill_color="#667eea", back_color="white")
     
-    # Convertir en bytes pour Streamlit
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     buf.seek(0)
@@ -866,3 +864,9 @@ def add_install_qr():
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+# ← APPEL DE LA FONCTION (c'était ça qui manquait !)
+add_install_qr()
+
+# ── Footer ──
+st.markdown(f'<div class="footer">{T["footer"]}</div>', unsafe_allow_html=True)
