@@ -837,7 +837,7 @@ if os.path.exists(HISTORIQUE_FILE):
         scores = df_hist["Score risque"].str.replace("%","").astype(int)
         fig3, ax3 = plt.subplots(figsize=(8, 3))
         fig3.patch.set_facecolor('#764ba2')
-        ax3.set_facecolor('rgba(255,255,255,0.1)')
+        ax3.set_facecolor('#8b6db5')
         ax3.plot(range(len(scores)), scores, color='white', linewidth=2, marker='o', markersize=6)
         ax3.fill_between(range(len(scores)), scores, alpha=0.3, color='white')
         ax3.set_ylabel(T["score_label"], color='white', fontsize=10)
