@@ -5,3 +5,4 @@ matplotlib
 numpy
 reportlab
 xgboost
+qrcode[pil]

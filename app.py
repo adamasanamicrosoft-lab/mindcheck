@@ -860,7 +860,62 @@ else:
 
 # ── QR Code pour installation mobile (Étape 3) ──
 st.markdown("---")
-add_install_qr()
-
-# ── Footer stylisé ──
-st.markdown(f'<div class="footer">{T["footer"]}</div>', unsafe_allow_html=True)
+def add_install_qr():
+    import qrcode
+    from PIL import Image
+    import io
+    
+    # Générer le QR code en Python
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=8,
+        border=4,
+    )
+    qr.add_data("https://mindcheck.streamlit.app")
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="#667eea", back_color="white")
+    
+    # Convertir en bytes pour Streamlit
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    
+    st.markdown("""
+    <div style='text-align:center; background:rgba(255,255,255,0.1); 
+    border-radius:20px; padding:20px; margin:20px 0;'>
+        <h4 style='color:white'>📱 Installe MindCheck sur ton téléphone</h4>
+        <p style='color:rgba(255,255,255,0.8); font-size:0.85em;'>
+            🔹 Scanne ce QR code avec ton téléphone<br>
+            🔹 Puis suis les instructions d'installation
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        st.image(buf, width=200)
+    
+    st.markdown("""
+    <div class='install-steps'>
+        <h4>📲 Comment installer ?</h4>
+        <div style='display:flex; gap:20px; flex-wrap:wrap;'>
+            <div style='flex:1; min-width:200px;'>
+                <strong>📱 Android :</strong>
+                <ol>
+                    <li>Ouvre Chrome</li>
+                    <li>Clique sur "Installer" en bas</li>
+                    <li>Confirme l'installation</li>
+                </ol>
+            </div>
+            <div style='flex:1; min-width:200px;'>
+                <strong>🍎 iPhone :</strong>
+                <ol>
+                    <li>Ouvre Safari</li>
+                    <li>Clique sur "Partager"</li>
+                    <li>Choisis "Ajouter à l'écran"</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
