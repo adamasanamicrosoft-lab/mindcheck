@@ -432,105 +432,91 @@ if model_to_use:
 
             st.progress(score_risque / 100)
 
-           # Radar amélioré avec gradient et animations
-st.markdown(f"### {T['radar']}")
-valeurs    = [family_enc, work_enc/3, 1-seek_enc/2, 1-benefits_enc/2, 1-anon_enc/2, remote_enc]
-categories = T["cat_radar"]
+            # Radar amélioré avec gradient et animations
+            st.markdown(f"### {T['radar']}")
+            valeurs = [family_enc, work_enc/3, 1-seek_enc/2, 1-benefits_enc/2, 1-anon_enc/2, remote_enc]
+            categories = T["cat_radar"]
 
-radar_html = f"""
-<div style="display:flex; justify-content:center; margin:20px 0;">
-<svg width="400" height="400" viewBox="0 0 400 400">
-  <defs>
-    <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"   stop-color="{'#ff6b6b' if resultat==1 else '#51cf66'}" stop-opacity="0.8"/>
-      <stop offset="100%" stop-color="{'#ee0979' if resultat==1 else '#00b09b'}" stop-opacity="0.2"/>
-    </radialGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <style>
-      @keyframes pulse {{
-        0%   {{ opacity: 0.7; transform: scale(1);   }}
-        50%  {{ opacity: 1.0; transform: scale(1.02);}}
-        100% {{ opacity: 0.7; transform: scale(1);   }}
-      }}
-      @keyframes rotate {{
-        from {{ transform: rotate(0deg);   }}
-        to   {{ transform: rotate(360deg); }}
-      }}
-      .radar-polygon {{ 
-        animation: pulse 3s ease-in-out infinite;
-        transform-origin: 200px 200px;
-      }}
-      .radar-ring {{
-        animation: pulse 4s ease-in-out infinite;
-        transform-origin: 200px 200px;
-      }}
-    </style>
-  </defs>
-  
-  <!-- Cercles de fond -->
-  <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-  <circle cx="200" cy="200" r="112" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-  <circle cx="200" cy="200" r="75"  fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-  <circle cx="200" cy="200" r="37"  fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            radar_html = f"""
+            <div style="display:flex; justify-content:center; margin:20px 0;">
+            <svg width="400" height="400" viewBox="0 0 400 400">
+              <defs>
+                <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="{'#ff6b6b' if resultat==1 else '#51cf66'}" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="{'#ee0979' if resultat==1 else '#00b09b'}" stop-opacity="0.2"/>
+                </radialGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <style>
+                  @keyframes pulse {{
+                    0%   {{ opacity: 0.7; transform: scale(1);   }}
+                    50%  {{ opacity: 1.0; transform: scale(1.02);}}
+                    100% {{ opacity: 0.7; transform: scale(1);   }}
+                  }}
+                  .radar-polygon {{ 
+                    animation: pulse 3s ease-in-out infinite;
+                    transform-origin: 200px 200px;
+                  }}
+                </style>
+              </defs>
+              
+              <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+              <circle cx="200" cy="200" r="112" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+              <circle cx="200" cy="200" r="75"  fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+              <circle cx="200" cy="200" r="37"  fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            
+              <text x="205" y="68"  fill="rgba(255,255,255,0.5)" font-size="10">100%</text>
+              <text x="205" y="95"  fill="rgba(255,255,255,0.5)" font-size="10">75%</text>
+              <text x="205" y="132" fill="rgba(255,255,255,0.5)" font-size="10">50%</text>
+              <text x="205" y="168" fill="rgba(255,255,255,0.5)" font-size="10">25%</text>
+            
+              {''.join([f'<line x1="200" y1="200" x2="{int(200 + 150 * __import__("math").sin(i/6*2*__import__("math").pi))}" y2="{int(200 - 150 * __import__("math").cos(i/6*2*__import__("math").pi))}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>' for i in range(6)])}
+            
+              <polygon 
+                class="radar-polygon"
+                points="{','.join([f'{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))} {int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi))}' for i in range(6)])}"
+                fill="url(#radarGrad)"
+                stroke="{'#ff6b6b' if resultat==1 else '#51cf66'}"
+                stroke-width="2.5"
+                filter="url(#glow)"
+              />
+            
+              {''.join([f"""
+              <circle 
+                cx="{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))}"
+                cy="{int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi))}"
+                r="6" 
+                fill="{'#ff6b6b' if resultat==1 else '#51cf66'}"
+                stroke="white" 
+                stroke-width="2"
+                filter="url(#glow)"
+              />
+              <text
+                x="{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))}"
+                y="{int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi) - 12)}"
+                fill="white" font-size="11" font-weight="bold" text-anchor="middle"
+              >{int(valeurs[i]*100)}%</text>
+              """ for i in range(6)])}
+            
+              {''.join([f"""
+              <text
+                x="{int(200 + 170 * __import__("math").sin(i/6*2*__import__("math").pi))}"
+                y="{int(200 - 170 * __import__("math").cos(i/6*2*__import__("math").pi) + 5)}"
+                fill="white" font-size="13" font-weight="bold" text-anchor="middle"
+              >{categories[i]}</text>
+              """ for i in range(6)])}
+            </svg>
+            </div>
+            """
 
-  <!-- Labels de pourcentage -->
-  <text x="205" y="68"  fill="rgba(255,255,255,0.5)" font-size="10">100%</text>
-  <text x="205" y="95"  fill="rgba(255,255,255,0.5)" font-size="10">75%</text>
-  <text x="205" y="132" fill="rgba(255,255,255,0.5)" font-size="10">50%</text>
-  <text x="205" y="168" fill="rgba(255,255,255,0.5)" font-size="10">25%</text>
-
-  <!-- Axes -->
-  {''.join([f'<line x1="200" y1="200" x2="{int(200 + 150 * __import__("math").sin(i/6*2*__import__("math").pi))}" y2="{int(200 - 150 * __import__("math").cos(i/6*2*__import__("math").pi))}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>' for i in range(6)])}
-
-  <!-- Polygone radar animé -->
-  <polygon 
-    class="radar-polygon"
-    points="{','.join([f'{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))} {int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi))}' for i in range(6)])}"
-    fill="url(#radarGrad)"
-    stroke="{'#ff6b6b' if resultat==1 else '#51cf66'}"
-    stroke-width="2.5"
-    filter="url(#glow)"
-  />
-
-  <!-- Points sur les sommets -->
-  {''.join([f"""
-  <circle 
-    cx="{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))}"
-    cy="{int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi))}"
-    r="6" 
-    fill="{'#ff6b6b' if resultat==1 else '#51cf66'}"
-    stroke="white" 
-    stroke-width="2"
-    filter="url(#glow)"
-  />
-  <text
-    x="{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))}"
-    y="{int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi) - 12)}"
-    fill="white" font-size="11" font-weight="bold" text-anchor="middle"
-  >{int(valeurs[i]*100)}%</text>
-  """ for i in range(6)])}
-
-  <!-- Labels des axes -->
-  {''.join([f"""
-  <text
-    x="{int(200 + 170 * __import__("math").sin(i/6*2*__import__("math").pi))}"
-    y="{int(200 - 170 * __import__("math").cos(i/6*2*__import__("math").pi) + 5)}"
-    fill="white" font-size="13" font-weight="bold" text-anchor="middle"
-  >{categories[i]}</text>
-  """ for i in range(6)])}
-</svg>
-</div>
-"""
-
-st.markdown(radar_html, unsafe_allow_html=True)
+            st.markdown(radar_html, unsafe_allow_html=True)
 
             # Barres
             st.markdown(f"### {T['detail']}")
             for nom, val in zip(T["cat_barres"], valeurs):
-                pct   = int(val * 100)
+                pct = int(val * 100)
                 emoji = "🔴" if pct >= 66 else ("🟡" if pct >= 33 else "🟢")
                 st.markdown(f"**{nom}** {emoji} `{pct}%`")
                 st.progress(val)
@@ -539,14 +525,14 @@ st.markdown(radar_html, unsafe_allow_html=True)
             st.markdown(f"### {T['pourquoi']}")
             if hasattr(model_to_use, 'feature_importances_'):
                 feature_names = T["feature_names"]
-                importances   = model_to_use.feature_importances_
-                indices       = np.argsort(importances)[::-1]
+                importances = model_to_use.feature_importances_
+                indices = np.argsort(importances)[::-1]
 
                 fig2, ax2 = plt.subplots(figsize=(8, 4))
                 fig2.patch.set_facecolor('#f8f9fa')
                 ax2.set_facecolor('#f8f9fa')
                 bars = ax2.barh([feature_names[i] for i in indices[:5]],
-                                [importances[i]   for i in indices[:5]],
+                                [importances[i] for i in indices[:5]],
                                 color='#667eea', edgecolor='white', height=0.6)
                 for bar, val in zip(bars, [importances[i] for i in indices[:5]]):
                     ax2.text(val+0.003, bar.get_y()+bar.get_height()/2,
@@ -567,7 +553,7 @@ st.markdown(radar_html, unsafe_allow_html=True)
             # PDF
             st.markdown(f"### {T['pdf_titre']}")
             importances_pdf = model_to_use.feature_importances_ if hasattr(model_to_use, 'feature_importances_') else np.ones(8)/8
-            indices_pdf     = np.argsort(importances_pdf)[::-1]
+            indices_pdf = np.argsort(importances_pdf)[::-1]
             pdf = generer_pdf(age, gender, family, work, remote, benefits, seek, anon,
                               score_risque, score_bienetre, resultat, valeurs,
                               importances_pdf, T["feature_names"], indices_pdf)
