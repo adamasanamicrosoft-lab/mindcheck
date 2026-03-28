@@ -7,3 +7,4 @@ reportlab
 xgboost
 qrcode[pil]
 Pillow
+supabase
