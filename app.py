@@ -836,7 +836,7 @@ if os.path.exists(HISTORIQUE_FILE):
         st.markdown(f"<h4 style='text-align:center;color:white'>{T['evolution']}</h4>", unsafe_allow_html=True)
         scores = df_hist["Score risque"].str.replace("%","").astype(int)
         fig3, ax3 = plt.subplots(figsize=(8, 3))
-        fig3.patch.set_facecolor('transparent')
+        fig3.patch.set_facecolor('#764ba2')
         ax3.set_facecolor('rgba(255,255,255,0.1)')
         ax3.plot(range(len(scores)), scores, color='white', linewidth=2, marker='o', markersize=6)
         ax3.fill_between(range(len(scores)), scores, alpha=0.3, color='white')
