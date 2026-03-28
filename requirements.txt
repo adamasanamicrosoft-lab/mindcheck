@@ -6,3 +6,4 @@ numpy
 reportlab
 xgboost
 qrcode[pil]
+Pillow
