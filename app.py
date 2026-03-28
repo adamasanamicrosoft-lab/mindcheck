@@ -280,59 +280,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ── Fonction QR Code ──────────────────────────────────────────────
-def add_install_qr():
-    """Ajoute un QR code pour installer l'app facilement"""
-    
-    qr_html = """
-    <div class="qr-container">
-        <h4>📱 Installe MindCheck sur ton téléphone</h4>
-        <div id="qrcode" style="display: inline-block; background: white; padding: 15px; border-radius: 20px; margin: 10px 0;"></div>
-        <p style="font-size: 0.85em; margin-top: 10px;">
-            🔹 Scanne ce QR code avec ton téléphone<br>
-            🔹 Puis suis les instructions d'installation
-        </p>
-    </div>
-    
-    <div class="install-steps">
-        <h4>📲 Comment installer ?</h4>
-        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 200px;">
-                <strong>📱 Android :</strong>
-                <ol>
-                    <li>Ouvre Chrome</li>
-                    <li>Clique sur "Installer" en bas</li>
-                    <li>Confirme l'installation</li>
-                </ol>
-            </div>
-            <div style="flex: 1; min-width: 200px;">
-                <strong>🍎 iPhone :</strong>
-                <ol>
-                    <li>Ouvre Safari</li>
-                    <li>Clique sur "Partager"</li>
-                    <li>Choisis "Ajouter à l'écran"</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script>
-        setTimeout(() => {
-            const qrcodeDiv = document.getElementById('qrcode');
-            if (qrcodeDiv && !qrcodeDiv.hasChildNodes()) {
-                new QRCode(qrcodeDiv, {
-                    text: https://mindcheck.streamlit.app,
-                    width: 180,
-                    height: 180
-                });
-            }
-        }, 1000);
-    </script>
-    """
-    
-    st.markdown(qr_html, unsafe_allow_html=True)
-
 # ── Traductions modernisées ──
 LANG = {
     "FR": {
