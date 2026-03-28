@@ -432,14 +432,15 @@ if model_to_use:
 
             st.progress(score_risque / 100)
 
-            # Radar avec matplotlib (version corrigée et fiable)
+            # Radar avec matplotlib (version corrigée - sans rgba)
             st.markdown(f"### {T['radar']}")
             valeurs = [family_enc, work_enc/3, 1-seek_enc/2, 1-benefits_enc/2, 1-anon_enc/2, remote_enc]
             categories = T["cat_radar"]
             
             fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
             fig.patch.set_facecolor('none')
-            ax.set_facecolor('rgba(255,255,255,0.1)')
+            # Utiliser une couleur transparente avec tuple RGB + alpha
+            ax.set_facecolor((1.0, 1.0, 1.0, 0.1))
             
             angles = [n / 6 * 2 * np.pi for n in range(6)]
             valeurs_ferme = valeurs + [valeurs[0]]
@@ -462,8 +463,8 @@ if model_to_use:
             ax.set_xticklabels(categories, size=10, color='white')
             ax.set_ylim(0, 1)
             ax.set_yticks([0.25, 0.5, 0.75, 1.0])
-            ax.set_yticklabels(['25%', '50%', '75%', '100%'], size=8, color='rgba(255,255,255,0.7)')
-            ax.grid(color='rgba(255,255,255,0.2)', linestyle='--', linewidth=0.5)
+            ax.set_yticklabels(['25%', '50%', '75%', '100%'], size=8, color=(1, 1, 1, 0.7))
+            ax.grid(color=(1, 1, 1, 0.2), linestyle='--', linewidth=0.5)
             ax.spines['polar'].set_visible(False)
             
             plt.tight_layout()
