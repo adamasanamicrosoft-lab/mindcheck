@@ -432,86 +432,42 @@ if model_to_use:
 
             st.progress(score_risque / 100)
 
-            # Radar amélioré avec gradient et animations
+            # Radar avec matplotlib (version corrigée et fiable)
             st.markdown(f"### {T['radar']}")
             valeurs = [family_enc, work_enc/3, 1-seek_enc/2, 1-benefits_enc/2, 1-anon_enc/2, remote_enc]
             categories = T["cat_radar"]
-
-            radar_html = f"""
-            <div style="display:flex; justify-content:center; margin:20px 0;">
-            <svg width="400" height="400" viewBox="0 0 400 400">
-              <defs>
-                <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%"   stop-color="{'#ff6b6b' if resultat==1 else '#51cf66'}" stop-opacity="0.8"/>
-                  <stop offset="100%" stop-color="{'#ee0979' if resultat==1 else '#00b09b'}" stop-opacity="0.2"/>
-                </radialGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-                <style>
-                  @keyframes pulse {{
-                    0%   {{ opacity: 0.7; transform: scale(1);   }}
-                    50%  {{ opacity: 1.0; transform: scale(1.02);}}
-                    100% {{ opacity: 0.7; transform: scale(1);   }}
-                  }}
-                  .radar-polygon {{ 
-                    animation: pulse 3s ease-in-out infinite;
-                    transform-origin: 200px 200px;
-                  }}
-                </style>
-              </defs>
-              
-              <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-              <circle cx="200" cy="200" r="112" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-              <circle cx="200" cy="200" r="75"  fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-              <circle cx="200" cy="200" r="37"  fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
             
-              <text x="205" y="68"  fill="rgba(255,255,255,0.5)" font-size="10">100%</text>
-              <text x="205" y="95"  fill="rgba(255,255,255,0.5)" font-size="10">75%</text>
-              <text x="205" y="132" fill="rgba(255,255,255,0.5)" font-size="10">50%</text>
-              <text x="205" y="168" fill="rgba(255,255,255,0.5)" font-size="10">25%</text>
+            fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+            fig.patch.set_facecolor('none')
+            ax.set_facecolor('rgba(255,255,255,0.1)')
             
-              {''.join([f'<line x1="200" y1="200" x2="{int(200 + 150 * __import__("math").sin(i/6*2*__import__("math").pi))}" y2="{int(200 - 150 * __import__("math").cos(i/6*2*__import__("math").pi))}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>' for i in range(6)])}
+            angles = [n / 6 * 2 * np.pi for n in range(6)]
+            valeurs_ferme = valeurs + [valeurs[0]]
+            angles_ferme = angles + [angles[0]]
             
-              <polygon 
-                class="radar-polygon"
-                points="{','.join([f'{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))} {int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi))}' for i in range(6)])}"
-                fill="url(#radarGrad)"
-                stroke="{'#ff6b6b' if resultat==1 else '#51cf66'}"
-                stroke-width="2.5"
-                filter="url(#glow)"
-              />
+            couleur = '#ff6b6b' if resultat == 1 else '#51cf66'
             
-              {''.join([f"""
-              <circle 
-                cx="{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))}"
-                cy="{int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi))}"
-                r="6" 
-                fill="{'#ff6b6b' if resultat==1 else '#51cf66'}"
-                stroke="white" 
-                stroke-width="2"
-                filter="url(#glow)"
-              />
-              <text
-                x="{int(200 + valeurs[i] * 150 * __import__("math").sin(i/6*2*__import__("math").pi))}"
-                y="{int(200 - valeurs[i] * 150 * __import__("math").cos(i/6*2*__import__("math").pi) - 12)}"
-                fill="white" font-size="11" font-weight="bold" text-anchor="middle"
-              >{int(valeurs[i]*100)}%</text>
-              """ for i in range(6)])}
+            ax.fill(angles_ferme, valeurs_ferme, alpha=0.3, color=couleur)
+            ax.plot(angles_ferme, valeurs_ferme, linewidth=2, color=couleur)
+            ax.scatter(angles, valeurs, color=couleur, s=50, zorder=5)
             
-              {''.join([f"""
-              <text
-                x="{int(200 + 170 * __import__("math").sin(i/6*2*__import__("math").pi))}"
-                y="{int(200 - 170 * __import__("math").cos(i/6*2*__import__("math").pi) + 5)}"
-                fill="white" font-size="13" font-weight="bold" text-anchor="middle"
-              >{categories[i]}</text>
-              """ for i in range(6)])}
-            </svg>
-            </div>
-            """
-
-            st.markdown(radar_html, unsafe_allow_html=True)
+            for angle, val in zip(angles, valeurs):
+                ax.annotate(f"{int(val*100)}%", 
+                           xy=(angle, val), 
+                           xytext=(angle, val + 0.12),
+                           ha='center', va='center', 
+                           fontsize=10, color='white', fontweight='bold')
+            
+            ax.set_xticks(angles)
+            ax.set_xticklabels(categories, size=10, color='white')
+            ax.set_ylim(0, 1)
+            ax.set_yticks([0.25, 0.5, 0.75, 1.0])
+            ax.set_yticklabels(['25%', '50%', '75%', '100%'], size=8, color='rgba(255,255,255,0.7)')
+            ax.grid(color='rgba(255,255,255,0.2)', linestyle='--', linewidth=0.5)
+            ax.spines['polar'].set_visible(False)
+            
+            plt.tight_layout()
+            st.pyplot(fig)
 
             # Barres
             st.markdown(f"### {T['detail']}")
